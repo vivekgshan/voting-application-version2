@@ -26,7 +26,7 @@ services:
     image: prom/mysqld-exporter
     container_name: mysqld-exporter
     environment:
-      DATA_SOURCE_NAME: "votinguser:votingpass@(mysql-db:3306)/"
+      DATA_SOURCE_NAME: "votinguser:votingpass@tcp(mysql-db:3306)/"
     ports:
       - "9104:9104"
     depends_on:
