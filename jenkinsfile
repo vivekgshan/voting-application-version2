@@ -1,0 +1,72 @@
+pipeline {
+    agent any
+
+    environment {
+        COMPOSE_FILE = 'docker-compose.yml'
+    }
+
+    stages {
+        stage('Checkout Code') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Clean Up') {
+            steps {
+                echo "Stopping and removing old containers..."
+                sh 'docker-compose down || true'
+            }
+        }
+
+        stage('Build Voting UI') {
+            steps {
+                echo "Building frontend voting UI image..."
+                sh 'docker-compose build voting-ui'
+            }
+        }
+
+        stage('Start Application Stack') {
+            steps {
+                echo "Starting services with Docker Compose..."
+                sh 'docker-compose up -d'
+            }
+        }
+
+        stage('Wait for Containers') {
+            steps {
+                echo "Waiting for MySQL and App to be ready..."
+                sh 'sleep 30'  // You can improve this using health checks
+            }
+        }
+
+        stage('Verify Services') {
+            steps {
+                echo "Verifying running containers..."
+                sh 'docker ps'
+            }
+        }
+
+        stage('Post-Build Healthcheck') {
+            steps {
+                echo "Checking if voting app is accessible..."
+                sh 'curl --fail http://localhost:80 || exit 1'
+            }
+        }
+    }
+
+    post {
+        always {
+            echo "Final Container Logs:"
+            sh 'docker-compose logs --tail=50'
+        }
+
+        success {
+            echo "Deployment succeeded!"
+        }
+
+        failure {
+            echo "Deployment failed. Consider inspecting logs."
+        }
+    }
+}
