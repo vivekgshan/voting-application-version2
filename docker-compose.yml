@@ -25,6 +25,8 @@ services:
   mysqld-exporter:
     image: prom/mysqld-exporter
     container_name: mysqld-exporter
+    volumes:
+      - ./monitoring/.my.cnf:/root/.my.cnf:ro
     environment:
       DATA_SOURCE_NAME: "votinguser:votingpass@tcp(mysql-db:3306)/"
     ports:
