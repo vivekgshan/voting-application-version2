@@ -26,12 +26,28 @@ pipeline {
             }
         }
 
-        stage('Start Application Stack') {
-            steps {
-                echo "Starting services with Docker Compose..."
-                sh 'docker-compose up -d'
+        #stage('Start Application Stack') {
+        #    steps {
+        #        echo "Starting services with Docker Compose..."
+        #        sh 'docker-compose up -d'
+        #    }
+        #}
+
+       stage('Deploy Containers') {
+           steps {
+              sh '''
+               if [ "$(docker ps -q -f name=mysql-db)" ]; then
+               echo "mysql-db container is already running."
+               else
+                docker-compose up -d mysql-db
+               fi
+
+               # Now start the rest (voting-ui, prometheus, grafana, etc.)
+               docker-compose up -d --build voting-ui prometheus grafana alertmanager node-exporter mysqld-exporter
+               '''
             }
         }
+
 
         stage('Wait for Containers') {
             steps {
