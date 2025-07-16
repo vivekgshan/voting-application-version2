@@ -26,33 +26,27 @@ pipeline {
             }
         }
 
-        #stage('Start Application Stack') {
-        #    steps {
-        #        echo "Starting services with Docker Compose..."
-        #        sh 'docker-compose up -d'
-        #    }
-        #}
+        stage('Deploy Containers') {
+            steps {
+                sh '''
+                echo "Checking if mysql-db container is already running..."
+                if [ "$(docker ps -q -f name=mysql-db)" ]; then
+                    echo "mysql-db container is already running."
+                else
+                    echo "Starting mysql-db container..."
+                    docker-compose up -d mysql-db
+                fi
 
-       stage('Deploy Containers') {
-           steps {
-              sh '''
-               if [ "$(docker ps -q -f name=mysql-db)" ]; then
-               echo "mysql-db container is already running."
-               else
-                docker-compose up -d mysql-db
-               fi
-
-               # Now start the rest (voting-ui, prometheus, grafana, etc.)
-               docker-compose up -d --build voting-ui prometheus grafana alertmanager node-exporter mysqld-exporter
-               '''
+                # Start other services
+                docker-compose up -d --build voting-ui prometheus grafana alertmanager node-exporter mysqld-exporter
+                '''
             }
         }
 
-
         stage('Wait for Containers') {
             steps {
-                echo "Waiting for MySQL and App to be ready..."
-                sh 'sleep 30'  // You can improve this using health checks
+                echo "Waiting for MySQL and app to be ready..."
+                sh 'sleep 30' // Use better health checks in production
             }
         }
 
@@ -66,7 +60,14 @@ pipeline {
         stage('Post-Build Healthcheck') {
             steps {
                 echo "Checking if voting app is accessible..."
-                sh 'curl --fail http://localhost:80 || exit 1'
+                sh '''
+                if curl --fail http://localhost:80; then
+                    echo "Voting app is up!"
+                else
+                    echo "Voting app health check failed!"
+                    exit 1
+                fi
+                '''
             }
         }
     }
@@ -78,11 +79,11 @@ pipeline {
         }
 
         success {
-            echo "Deployment succeeded!"
+            echo "✅ Deployment succeeded!"
         }
 
         failure {
-            echo "Deployment failed. Consider inspecting logs."
+            echo "❌ Deployment failed. Check the logs above."
         }
     }
 }
