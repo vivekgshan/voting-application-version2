@@ -38,7 +38,7 @@ pipeline {
                 fi
 
                 # Start other services
-                docker-compose up -d --build voting-ui prometheus grafana alertmanager node-exporter mysqld-exporter
+                docker-compose up -d --build voting-ui prometheus grafana alertmanager node-exporter mysqld-exporter cadvisor
                 '''
             }
         }
