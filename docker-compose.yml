@@ -132,7 +132,8 @@ services:
 
   slack-relay:
     build:
-      context: .
+      context: ./slack-relay
+      dockerfile: dockerfile
     container_name: voting-project-v2-slack-relay
     environment:
       - SLACK_WEBHOOK_URL=https://hooks.slack.com/services/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
