@@ -130,6 +130,16 @@ services:
       - monitoring-net
     restart: always
 
+  slack-relay:
+    build:
+      context: ./slack-relay
+    ports:
+      - "5000:5000"
+    networks:
+      - monitoring-net
+    restart: unless-stopped
+
+
 
 networks:
   monitoring-net:
