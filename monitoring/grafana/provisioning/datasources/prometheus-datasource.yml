@@ -19,5 +19,6 @@ datasources:
   - name: cAdvisor
     type: prometheus
     access: proxy
-    url: http://cadvisor:8081
+    url: http://cadvisor:8080
+    isDefault: false
     editable: true
