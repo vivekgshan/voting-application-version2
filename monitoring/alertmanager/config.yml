@@ -10,8 +10,6 @@ route:
 
 receivers:
   - name: slack-notifications
-    slack_configs:
-      - api_url: 'https://hooks.slack.com/services/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'
-        channel: '#new-channel'
+    webhook_configs:
+      - url: 'http://slack-relay:5000/slack-relay'
         send_resolved: true
-        text: '{{ range .Alerts }}Alert: {{ .Annotations.summary }}{{ end }}'
