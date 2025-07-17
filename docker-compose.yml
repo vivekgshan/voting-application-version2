@@ -35,7 +35,7 @@ services:
       - mysql-db
     networks:
       - monitoring-net
-    restart: always
+    restart: unless-stopped
 
   node-exporter:
     image: prom/node-exporter
