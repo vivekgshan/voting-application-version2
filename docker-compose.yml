@@ -42,6 +42,14 @@ services:
     container_name: node-exporter
     ports:
       - "9100:9100"
+    command:
+      - '--collector.netstat'
+      - '--path.procfs=/host/proc'
+      - '--path.sysfs=/host/sys'
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+    pid: "host"
     networks:
       - monitoring-net
     restart: always
