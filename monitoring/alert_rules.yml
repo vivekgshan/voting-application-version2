@@ -49,6 +49,17 @@ groups:
         annotations:
           summary: "MySQL is down"
           description: "The MySQL exporter reported MySQL as unreachable."
+          
+  - name: mysqld-exporter.rules
+    rules:
+      - alert: MySQLExporterDown
+        expr: up{job="mysqld-exporter"} == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "MySQL Exporter is down"
+          description: "mysqld-exporter has been down for more than 1 minute."
 
   - name: node-exporter
     rules:
