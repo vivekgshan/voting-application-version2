@@ -15,3 +15,9 @@ datasources:
     jsonData:
       implementation: prometheus
     editable: true
+
+  - name: cAdvisor
+    type: prometheus
+    access: proxy
+    url: http://cadvisor:8081
+    editable: true
