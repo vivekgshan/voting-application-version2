@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify
 import requests
 
 app = Flask(__name__)
-SLACK_WEBHOOK = 'https://hooks.slack.com/services/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'  # Replace with your real webhook
+SLACK_WEBHOOK_URL = 'https://hooks.slack.com/services/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'  # Replace with your real webhook
 
 @app.route('/slack-relay', methods=['POST'])
 def slack_relay():
