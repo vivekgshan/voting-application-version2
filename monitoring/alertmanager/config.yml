@@ -11,7 +11,7 @@ route:
 receivers:
   - name: slack-notifications
     slack_configs:
-      - api_url: 'https://hooks.slack.com/services/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'
+      - api_url: 'https://hooks.slack.com/services/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'
         username: 'AlertManager'
         channel: '#all-testing-alerts'
         icon_emoji: ':rotating_light:'
