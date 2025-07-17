@@ -132,7 +132,11 @@ services:
 
   slack-relay:
     build:
-      context: ./slack-relay
+      context: .
+    container_name: voting-project-v2-slack-relay
+    environment:
+      - SLACK_WEBHOOK_URL=https://hooks.slack.com/services/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
+      - TEAMS_WEBHOOK_URL=https://hclo365.webhook.office.com/webhookb2/407755fd-5bd3-4c5c-bbca-480fe17728d4@189de737-c93a-4f5a-8b68-6f4ca9941912/IncomingWebhook/6f97dee426e749aa95890b8d0c50ca0f/0c39e0b3-a165-4381-90f8-90878f64d741/V2utctz6dvrANPxQU19sBwdjVFla1-wuEAvCoaPp_1fGg1 
     ports:
       - "5000:5000"
     networks:
